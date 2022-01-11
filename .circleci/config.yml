@@ -41,8 +41,6 @@ jobs:
       - run:
           name: Setup Environment Variables
           command: |
-          $GH_TOKEN
-          $NOTION_TOKEN_V2
             echo 'export GH_TOKEN=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' >> $BASH_ENV
             echo 'export NOTION_TOKEN_V2=72d6b72a5e75f26b47d541d0d571f57e932805eb474776483b7811dc8564f683cc0e3607c56b31b4217f3a17892d6f7da4e2fa360873a54827805afa685425cd3d3bbf9ff956c6272aa0b103bc71' >> $BASH_ENV
       - attach_workspace:
