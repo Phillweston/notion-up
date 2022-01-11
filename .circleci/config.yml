@@ -39,10 +39,16 @@ jobs:
       - image: cimg/python:3.8
     steps:
       - run:
-          name: Setup Environment Variables
+          name: Check Env
           command: |
-            echo 'export GH_TOKEN=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' >> $BASH_ENV
-            echo 'export NOTION_TOKEN_V2=72d6b72a5e75f26b47d541d0d571f57e932805eb474776483b7811dc8564f683cc0e3607c56b31b4217f3a17892d6f7da4e2fa360873a54827805afa685425cd3d3bbf9ff956c6272aa0b103bc71' >> $BASH_ENV
+            if [ ! ${GH_TOKEN} ]; then
+                echo "'GH_TOKEN' not presented!"
+                exit 1
+            fi
+            if [ ! ${NOTION_TOKEN_V2} ]; then
+                echo "'NOTION_TOKEN_V2' not presented!"
+                exit 1
+            fi
       - attach_workspace:
           at: ~/project-export
       - checkout
@@ -82,10 +88,10 @@ jobs:
             # skip push for test
             exit 0
 
-            git clone -b feature/backups "https://${GH_TOKEN}@github.com/kaedea/notion-up.git" deploy
+            git clone -b feature/backups "https://${GH_TOKEN}@github.com/Phillweston/notion-up.git" deploy
             cd deploy
-            git config user.name "Kaede"
-            git config user.email "kidhaibara@gmail.com"
+            git config user.name "Phillweston"
+            git config user.email "2436559745@qq.com"
 
             # Copy files
             if [ -d 'dist' ]; then
@@ -99,7 +105,7 @@ jobs:
             git add *
             git status
             git commit -a -m "Circleci-bot notion backup - ${CIRCLE_BUILD_NUM}"
-            git push --force --quiet "https://${GH_TOKEN}@github.com/kaedea/notion-up.git"
+            git push --force --quiet "https://${GH_TOKEN}@github.com/Phillweston/notion-up.git"
 
   publish-github-release:
     parameters:
