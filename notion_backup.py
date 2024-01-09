@@ -74,13 +74,18 @@ class NotionUp:
         file = FileUtils.new_file(Config.output(), filename)
         FileUtils.create_file(file)
         with requests.get(url, stream=True) as r:
+            print(f"Response headers: {r.headers}")
+            print(f"Status code: {r.status_code}")
             total_size = int(r.headers.get('content-length', 0))
             block_size = 1024
             progress_bar = tqdm(total=total_size, unit='iB', unit_scale=True)
-            with open(file, 'wb') as f:
-                for data in r.iter_content(block_size):
-                    progress_bar.update(len(data))
-                    f.write(data)
+            try:
+                with open(file, 'wb') as f:
+                    for data in r.iter_content(block_size):
+                        progress_bar.update(len(data))
+                        f.write(data)
+            except Exception as e:
+                print(f"Exception occurred: {e}")
             progress_bar.close()
         return file
 
