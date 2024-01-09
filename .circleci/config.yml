@@ -57,6 +57,7 @@ jobs:
           command: |
             pip install requests
             pip install python-slugify
+            pip install tqdm
       - run:
           name: Run action
           command: |
