@@ -99,6 +99,9 @@ class NotionUp:
 
         # list spaces
         spaces = [(space_id, space_details["value"]["name"]) for (space_id, space_details) in userContent["space"].items()]
+        workspace_names = Config.workspace_name()
+        if workspace_names:
+            spaces = [space for space in spaces if space[1] in workspace_names]
         print("Available spaces total: {}".format(len(spaces)))
         for (spaceId, spaceName) in spaces:
             print(f"\nexport space: {spaceId}, {spaceName}")
@@ -114,7 +117,6 @@ class NotionUp:
             # Calculate and display file size
             file_size = Path(filePath).stat().st_size
             print(f"File size: {file_size} bytes")
-            break
         return zips
 
     @staticmethod
