@@ -88,10 +88,10 @@ jobs:
             # skip push for test
             exit 0
 
-            git clone -b feature/backups "https://${GH_TOKEN}@github.com/kaedea/notion-up.git" deploy
+            git clone -b feature/backups "https://${GH_TOKEN}@github.com/Phillweston/notion-up.git" deploy
             cd deploy
-            git config user.name "Kaede"
-            git config user.email "kidhaibara@gmail.com"
+            git config user.name "Phillweston"
+            git config user.email "2436559745@qq.com"
 
             # Copy files
             if [ -d 'dist' ]; then
@@ -105,7 +105,7 @@ jobs:
             git add *
             git status
             git commit -a -m "Circleci-bot notion backup - ${CIRCLE_BUILD_NUM}"
-            git push --force --quiet "https://${GH_TOKEN}@github.com/kaedea/notion-up.git"
+            git push --force --quiet "https://${GH_TOKEN}@github.com/Phillweston/notion-up.git"
 
   publish-github-release:
     parameters:

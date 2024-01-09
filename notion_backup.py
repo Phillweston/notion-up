@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import shutil
 import time
@@ -10,6 +11,8 @@ from slugify import slugify
 
 from utils.config import Config
 from utils.utils import FileUtils
+import sys
+from tqdm import tqdm
 
 
 class NotionUp:
@@ -71,8 +74,14 @@ class NotionUp:
         file = FileUtils.new_file(Config.output(), filename)
         FileUtils.create_file(file)
         with requests.get(url, stream=True) as r:
+            total_size = int(r.headers.get('content-length', 0))
+            block_size = 1024
+            progress_bar = tqdm(total=total_size, unit='iB', unit_scale=True)
             with open(file, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
+                for data in r.iter_content(block_size):
+                    progress_bar.update(len(data))
+                    f.write(data)
+            progress_bar.close()
         return file
 
     @staticmethod
@@ -92,10 +101,14 @@ class NotionUp:
             taskId = NotionUp.requestPost('enqueueTask', NotionUp.exportTask(spaceId)).get('taskId')
             # get exported file url and download
             url = NotionUp.waitForExportedUrl(taskId)
-            filename = slugify(f'{spaceName}-{spaceId}') + '.zip'
+            current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            filename = slugify(f'{spaceName}-{spaceId}-{current_time}') + '.zip'
             print('download exported zip: {}, {}'.format(url, filename))
             filePath = NotionUp.downloadFile(url, filename)
             zips.append(filePath)
+            # Calculate and display file size
+            file_size = Path(filePath).stat().st_size
+            print(f"File size: {file_size} bytes")
             break
         return zips
 
